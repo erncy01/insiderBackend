@@ -1,4 +1,3 @@
-// handlers/handlers.go
 package handlers
 
 import (
@@ -6,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"insider/league"
+	"insiderBackend/league"
 )
 
 func PingHandler(w http.ResponseWriter, r *http.Request) {
