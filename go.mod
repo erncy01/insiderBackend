@@ -1,4 +1,4 @@
-module insider
+module insiderBackend
 
 go 1.24.3
 
