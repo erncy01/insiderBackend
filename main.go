@@ -1,4 +1,3 @@
-// main.go
 package main
 
 import (
@@ -6,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"insider/handlers"
-	"insider/league"
+	"insiderBackend/handlers"
+	"insiderBackend/league"
 )
 
 func main() {
