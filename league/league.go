@@ -1,4 +1,3 @@
-// league/league.go
 package league
 
 import (
