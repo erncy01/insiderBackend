@@ -4,6 +4,7 @@ This project simulates a mini football league with 4 teams using GoLang for back
 
 ## Features
 
+- https://matchsimulator.com/about
 - Simulate one week or an entire league season
 - View real-time league standings and match results
 - Edit past match results and automatically recalculate standings
