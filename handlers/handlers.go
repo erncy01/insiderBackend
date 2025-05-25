@@ -1,3 +1,4 @@
+// Package handlers defines HTTP handlers.
 package handlers
 
 import (
@@ -9,14 +10,16 @@ import (
 )
 
 func PingHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "🏟️ Insider League Simulator is running!")
+	fmt.Fprint(w, "Running!")
 }
 
+// SimulateWeek handles the simulation of all remaining weeks.
 func SimulateWeekHandler(w http.ResponseWriter, r *http.Request) {
 	results := league.SimulateWeek()
 	json.NewEncoder(w).Encode(results)
 }
 
+// SimulateAll handles the simulation of all remaining weeks.
 func SimulateAllHandler(w http.ResponseWriter, r *http.Request) {
 	var allResults [][]league.MatchResult
 	for i := 0; i < 3; i++ {
@@ -29,16 +32,19 @@ func SimulateAllHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(allResults)
 }
 
+// Returns the current league standings.
 func StandingsHandler(w http.ResponseWriter, r *http.Request) {
 	standings := league.GetStandings()
 	json.NewEncoder(w).Encode(standings)
 }
 
+// Returns all match results.
 func MatchesHandler(w http.ResponseWriter, r *http.Request) {
 	matches := league.GetAllMatches()
 	json.NewEncoder(w).Encode(matches)
 }
 
+// EditMatch allows editing of a specific match result.
 func EditMatchHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -72,6 +78,7 @@ func EditMatchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Resets the league to its initial state.
 func ResetHandler(w http.ResponseWriter, r *http.Request) {
 	league.ResetLeague()
 	fmt.Fprint(w, "League has been reset.")
