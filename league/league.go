@@ -1,3 +1,4 @@
+// Package league defines the core logic and data structures.
 package league
 
 import (
@@ -9,6 +10,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+// Creating variables to use throughout the code
 type Team struct {
 	Name     string
 	Strength int
@@ -43,6 +45,7 @@ type Standing struct {
 	GD     int    `json:"gd"`
 }
 
+// Initialize database if not exists already
 func InitDB(filepath string) {
 	var err error
 	db, err = sql.Open("sqlite3", filepath)
@@ -65,8 +68,10 @@ func InitDB(filepath string) {
 	}
 }
 
+// SimulateWeek simulates matches for a single week.
 func SimulateWeek() []MatchResult {
 	rand.Seed(time.Now().UnixNano())
+	// Increase week number and create the matches to simulate
 	week++
 	matches := [][]int{{0, 1}, {2, 3}}
 	if week == 2 {
@@ -97,7 +102,7 @@ func SimulateWeek() []MatchResult {
 			away.Points++
 		}
 
-		// Save to DB
+		// Insert simulated mathces to the database
 		_, err := db.Exec(`
 			INSERT INTO matches (week, home_team, away_team, home_goals, away_goals)
 			VALUES (?, ?, ?, ?, ?)`, week, home.Name, away.Name, hg, ag)
@@ -116,6 +121,7 @@ func SimulateWeek() []MatchResult {
 	return results
 }
 
+// Simulate matches based on the algorithm
 func simulateMatch(homeStrength, awayStrength int) (int, int) {
 	matchMinutes := 90
 	shots := 0
@@ -126,7 +132,7 @@ func simulateMatch(homeStrength, awayStrength int) (int, int) {
 
 	for m := 0; m < matchMinutes; m++ {
 		eventChance := rand.Intn(1000)
-		if eventChance < 222 { // ~22% chance for an event (shot)
+		if eventChance < 222 { // Around 22% chance for a shot
 			if rand.Float64() < homePct {
 				if isGoal() {
 					hg++
@@ -143,7 +149,7 @@ func simulateMatch(homeStrength, awayStrength int) (int, int) {
 }
 
 func isGoal() bool {
-	// 1 in 5 chance that a shot results in a goal
+	// 1 in 5 chance for a shot to result in a goal
 	shotOutcome := rand.Intn(100)
 	return shotOutcome < 20
 }
@@ -197,8 +203,8 @@ func EditMatch(week int, homeTeam, awayTeam string, homeGoals, awayGoals int) bo
 	return rowsAffected > 0
 }
 
+// Used to recalculate after editing matches
 func RecalculateStandingsFromDatabase() error {
-	// Reset all teams
 	for _, t := range Teams {
 		t.Points = 0
 		t.GF = 0
@@ -253,6 +259,7 @@ func findTeamByName(name string) *Team {
 	return nil
 }
 
+// Reset league by deleting every row
 func ResetLeague() {
 	_, err := db.Exec("DELETE FROM matches")
 	if err != nil {
