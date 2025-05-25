@@ -1,3 +1,4 @@
+// script.js handles frontend interactions with the backend API.
 async function simulateWeek() {
   const res = await fetch("/simulate-week");
   const data = await res.json();
